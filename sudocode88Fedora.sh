@@ -6,8 +6,12 @@ sudo dnf copr enable sramanujam/zellij -y
 
 sudo dnf copr enable yalter/niri -y
 
+sudo dnf copr enable maveonair/jetbrains-mono-nerd-fonts -y
+
 #array of packages to install
 packages=(
+  "jetbrains-mono-nerd-fonts"
+  "jetbrains-mononl-nerd-fonts"
   "zoxide"
   "zellij"
   "tree-sitter-cli"
