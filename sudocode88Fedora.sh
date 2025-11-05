@@ -6,28 +6,31 @@ sudo dnf copr enable sramanujam/zellij -y
 
 sudo dnf copr enable yalter/niri -y
 
-sudo dnf copr enable maveonair/jetbrains-mono-nerd-fonts -y
+sudo dnf copr enable dejan/lazygit -y
+
+sudo dnf copr enable alternateved/eza -y
+
+sudo dnf install fedora-workstation-repositories -y
+
+sudo dnf update
 
 #array of packages to install
 packages=(
-  "jetbrains-mono-nerd-fonts"
-  "jetbrains-mononl-nerd-fonts"
   "zoxide"
   "zellij"
-  "tree-sitter-cli"
   "tuigreet"
-  "terminus-fonts-console"
-  "tealdeer"
   "stow"
   "snapper"
-  "ripgrep"
   "pass"
+  "ripgrep"
   "gnupg2"
+  "tealdeer"
+  "tree-sitter-cli"
+  "terminus-fonts-console"
   "niri"
   "waybar"
   "swaybg"
   "luarocks"
-  "lazygit"
   "kitty"
   "greetd"
   "greetd-selinux"
@@ -36,7 +39,6 @@ packages=(
   "gh"
   "fd-find"
   "fastfetch"
-  "eza"
   "curl"
   "dotnet-sdk-9.0"
   "btop"
@@ -44,10 +46,14 @@ packages=(
   "bat"
   "fzf"
   "thefuck"
-  "atuin"
   "starship"
   "flatpak"
   "neovim"
+  "lazygit"
+  "eza"
+  "unzip"
+  "fontconfig"
+  ########
 )
 
 for package in "${packages[@]}"; do
@@ -65,6 +71,18 @@ flatpak install -y flathub com.logseq.logseq
 flatpak install -y flathub io.github.sxyazi.yazi
 
 export EDITOR="nvim"
+
+# atuin setup
+curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh
+curl https://raw.githubusercontent.com/rcaloras/bash-preexec/master/bash-preexec.sh -o ~/.atuin/bash-preexec.sh
+
+# Nerd Font setup
+mkdir -p ~/.local/share/fonts
+cd ~/.local/share/fonts
+curl -OL https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/Iosevka.zip
+unzip Iosevka.zip
+rm Iosevka.zip
+fc-cache -f -v
 
 cd ~
 
@@ -90,8 +108,7 @@ for package_dir in */; do
   for system_package in "${SYSTEM_PACKAGES[@]}"; do
     # Modern bash comparison (double brackets and ==)
     if [[ "$package_name" == "$system_package" ]]; then
-      echo "-> Stowing system package $package_name..."
-      stow -t / "$package_name"
+      echo "-> Skipping system package $package_name..."
     fi
   done
 
@@ -100,5 +117,8 @@ for package_dir in */; do
 done
 
 echo "Stow operation complete."
+
+# tealdeer setup
+tldr --update
 
 reboot
